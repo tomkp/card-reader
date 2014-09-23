@@ -58,7 +58,6 @@ function deviceActivated(reader) {
     });
 
     reader.on('end', function () {
-        self.reader = null;
         device.emit('device-deactivated', this);
     });
 
