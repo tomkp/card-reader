@@ -1,15 +1,23 @@
 {
-  "name": "card-reader",
-  "version": "0.0.1",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "tomkp",
-  "license": "ISC",
-  "dependencies": {
-    "hexify": "^1.0.0",
-    "pcsclite": "^0.3.1"
-  },
-  "devDependencies": {}
+    "name": "card-reader",
+    "version": "0.0.1",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tomkp/card-reader.git"
+    },
+    "author": "tomkp",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/tomkp/card-reader/issues"
+    },
+    "homepage": "https://github.com/tomkp/card-reader",
+    "dependencies": {
+        "hexify": "^1.0.0",
+        "pcsclite": "^0.3.1"
+    },
+    "devDependencies": {}
 }
