@@ -1,7 +1,7 @@
 {
     "name": "card-reader",
     "version": "0.0.2",
-    "main": "index.js",
+    "main": "card-reader.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
