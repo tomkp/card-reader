@@ -15,7 +15,7 @@ Emits events for:
 
 ## Examples
 
-```
+```javascript
 
 var cardreader = require('card-reader');
 
