@@ -22,7 +22,6 @@
     "pcsclite": "^0.4.7"
   },
   "devDependencies": {
-    "babel": "^6.3.26",
     "babel-cli": "^6.4.0"
   }
 }
