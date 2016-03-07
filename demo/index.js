@@ -1,5 +1,7 @@
 var cardreader = require('../lib/card-reader');
 
+console.info('cardreader', cardreader);
+
 cardreader.on('device-activated', function (reader) {
     console.info('Device activated', reader);
 });

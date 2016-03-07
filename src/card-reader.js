@@ -1,15 +1,15 @@
-var EventEmitter = require('events').EventEmitter;
+const EventEmitter = require('events').EventEmitter;
 
-var pcsclite = require('pcsclite');
-var hexify = require('hexify');
+import pcsclite from 'pcsclite';
+import hexify from 'hexify';
 
-var device = new EventEmitter();
-var pcsc = pcsclite();
-var cardReader;
+const device = new EventEmitter();
+const pcsc = pcsclite();
+let cardReader;
 
 
 function cardInserted(reader, status) {
-    reader.connect(function (err, protocol) {
+    reader.connect((err, protocol) => {
         if (err) {
             device.emit('error', err);
         } else {
@@ -22,7 +22,7 @@ function cardInserted(reader, status) {
 
 
 function cardRemoved(reader) {
-    reader.disconnect(reader.SCARD_LEAVE_CARD, function (err) {
+    reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
         if (err) {
             device.emit('error', err);
         } else {
@@ -46,8 +46,8 @@ function isCardRemoved(changes, reader, status) {
 function deviceActivated(reader) {
     device.emit('device-activated', reader);
 
-    reader.on('status', function (status) {
-        var changes = this.state ^ status.state;
+    reader.on('status', (status) => {
+        var changes = reader.state ^ status.state;
         if (changes) {
             if (isCardRemoved(changes, reader, status)) {
                 cardRemoved(reader);
@@ -57,28 +57,28 @@ function deviceActivated(reader) {
         }
     });
 
-    reader.on('end', function () {
+    reader.on('end', () => {
         device.emit('device-deactivated', this);
     });
 
-    reader.on('error', function (err) {
+    reader.on('error', (err) => {
         device.emit('error', err);
     });
 }
 
 
-pcsc.on('reader', function (reader) {
+pcsc.on('reader', (reader) => {
     deviceActivated(reader);
 });
 
 
-pcsc.on('error', function (err) {
+pcsc.on('error', (err) => {
     device.emit('error', err);
 });
 
 
 
-device.issueCommand = function issueCommand(command, fn) {
+device.issueCommand = (command, fn) => {
     var buffer;
     if (Array.isArray(command)) {
         console.log('command is an Array', hexify.toHexString(command));
@@ -98,8 +98,8 @@ device.issueCommand = function issueCommand(command, fn) {
     if (fn) {
         cardReader.transmit(buffer, 0xFF, protocol, fn);
     } else {
-        return new Promise(function(resolve, reject) {
-            cardReader.transmit(buffer, 0xFF, protocol, function(err, response) {
+        return new Promise((resolve, reject) => {
+            cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
                 console.info('err, response', err, response);
                 if (err) reject(err);
                 else resolve(response);
