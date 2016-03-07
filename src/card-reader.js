@@ -1,5 +1,4 @@
-const EventEmitter = require('events').EventEmitter;
-
+import {EventEmitter} from 'events';
 import pcsclite from 'pcsclite';
 import hexify from 'hexify';
 
@@ -8,7 +7,7 @@ const pcsc = pcsclite();
 let cardReader;
 
 
-function cardInserted(reader, status) {
+const cardInserted = (reader, status) => {
     reader.connect((err, protocol) => {
         if (err) {
             device.emit('error', err);
@@ -18,10 +17,10 @@ function cardInserted(reader, status) {
             device.emit('card-inserted', reader, status);
         }
     });
-}
+};
 
 
-function cardRemoved(reader) {
+const cardRemoved = (reader) => {
     reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
         if (err) {
             device.emit('error', err);
@@ -30,20 +29,20 @@ function cardRemoved(reader) {
         }
     });
     cardReader = null;
-}
+};
 
 
-function isCardInserted(changes, reader, status) {
+const isCardInserted = (changes, reader, status) => {
     return (changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT);
-}
+};
 
 
-function isCardRemoved(changes, reader, status) {
+const isCardRemoved = (changes, reader, status) => {
     return (changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY);
-}
+};
 
 
-function deviceActivated(reader) {
+const deviceActivated = (reader) => {
     device.emit('device-activated', reader);
 
     reader.on('status', (status) => {
@@ -64,7 +63,7 @@ function deviceActivated(reader) {
     reader.on('error', (err) => {
         device.emit('error', err);
     });
-}
+};
 
 
 pcsc.on('reader', (reader) => {
