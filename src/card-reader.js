@@ -1,6 +1,8 @@
 import {EventEmitter} from 'events';
 import pcsclite from 'pcsclite';
 import hexify from 'hexify';
+import Apdu from 'apdu';
+
 
 const device = new EventEmitter();
 const pcsc = pcsclite();
@@ -88,6 +90,9 @@ device.issueCommand = (command, fn) => {
     } else if (Buffer.isBuffer(command)) {
         console.log('command is a Buffer', command);
         buffer = command;
+    } else if (command instanceof Apdu) {
+        console.info('command is an Apdu', command.toString());
+        buffer = command.toBuffer();
     } else {
         throw 'Unable to recognise command type';
     }
