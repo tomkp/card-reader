@@ -77,6 +77,7 @@ pcsc.on('error', function (err) {
 });
 
 
+
 device.issueCommand = function issueCommand(command, fn) {
     var buffer;
     if (Array.isArray(command)) {
@@ -94,7 +95,18 @@ device.issueCommand = function issueCommand(command, fn) {
 
     var protocol = 1;
     console.log('issue command', buffer);
-    cardReader.transmit(buffer, 0xFF, protocol, fn);
+    if (fn) {
+        cardReader.transmit(buffer, 0xFF, protocol, fn);
+    } else {
+        return new Promise(function(resolve, reject) {
+            cardReader.transmit(buffer, 0xFF, protocol, function(err, response) {
+                console.info('err, response', err, response);
+                if (err) reject(err);
+                else resolve(response);
+            });
+        });
+
+    }
 };
 
 
