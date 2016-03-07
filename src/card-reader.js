@@ -91,7 +91,7 @@ device.issueCommand = (command, fn) => {
         console.log('command is a Buffer', command);
         buffer = command;
     } else if (command instanceof Apdu) {
-        console.info('command is an Apdu', command.toString());
+        console.log('command is an Apdu', command.toString());
         buffer = command.toBuffer();
     } else {
         throw 'Unable to recognise command type';
@@ -104,7 +104,6 @@ device.issueCommand = (command, fn) => {
     } else {
         return new Promise((resolve, reject) => {
             cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
-                console.info('err, response', err, response);
                 if (err) reject(err);
                 else resolve(response);
             });
