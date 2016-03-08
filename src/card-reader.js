@@ -86,6 +86,11 @@ device.issueCommand = (command, fn) => {
     } else if (typeof command === 'string') {
         console.log('command is a String', command);
         buffer = new Buffer(hexify.toByteArray(command));
+    } else if (Buffer.isBuffer(command)) {
+        console.log('command is a Buffer', command);
+        buffer = command;
+    } else {
+        throw 'Unable to recognise command type';
     }
 
     var protocol = 1;
