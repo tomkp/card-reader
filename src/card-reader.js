@@ -14,7 +14,7 @@ const cardInserted = (reader, status) => {
             device.emit('error', err);
         } else {
             cardReader = reader;
-            console.log('Protocol(', reader.name, '):', protocol);
+            //console.log('Protocol(', reader.name, '):', protocol);
             device.emit('card-inserted', reader, status);
         }
     });
@@ -81,16 +81,16 @@ pcsc.on('error', (err) => {
 device.issueCommand = (command, fn) => {
     var buffer;
     if (Array.isArray(command)) {
-        console.log('command is an Array', hexify.toHexString(command));
+        //console.log('command is an Array', hexify.toHexString(command));
         buffer = new Buffer(command);
     } else if (typeof command === 'string') {
-        console.log('command is a String', command);
+        //console.log('command is a String', command);
         buffer = new Buffer(hexify.toByteArray(command));
     } else if (Buffer.isBuffer(command)) {
-        console.log('command is a Buffer', command);
+        //console.log('command is a Buffer', command);
         buffer = command;
     } else {
-        throw 'Unable to recognise command type';
+        throw 'Unable to recognise command type (' + command + ')';
     }
 
     var protocol = 1;
