@@ -14,7 +14,9 @@ cardreader.on('device-deactivated', function (reader) {
 cardreader.on('card-inserted', function (reader, status) {
     console.info('Card inserted', reader, status, this);
 
-    // either callback style
+    // issue a command...
+
+    // ...either callback style
     cardreader.issueCommand('00A404000E315041592E5359532E4444463031', function (err, data) {
         if (err) {
             console.error(err);
@@ -23,14 +25,14 @@ cardreader.on('card-inserted', function (reader, status) {
         }
     });
 
-    // or as a promise
+    // ...or as a promise
     cardreader
         .issueCommand('00A404000E315041592E5359532E4444463031')
         .then(function(response) {
             console.info('data-received', response.toString('hex'));
         }).catch(function(error) {
-            console.error(error);
-        });
+        console.error(error);
+    });
 });
 
 cardreader.on('card-removed', function (reader) {
