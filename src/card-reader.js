@@ -89,9 +89,6 @@ device.issueCommand = (command, fn) => {
     } else if (Buffer.isBuffer(command)) {
         console.log('command is a Buffer', command);
         buffer = command;
-    } else if (command instanceof Apdu) {
-        console.log('command is an Apdu', command.toString());
-        buffer = command.toBuffer();
     } else {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
