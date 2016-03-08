@@ -90,7 +90,8 @@ device.issueCommand = (command, fn) => {
         console.log('command is a Buffer', command);
         buffer = command;
     } else {
-        throw 'Unable to recognise command type (' + typeof command + ')';
+        console.log('Unable to recognise command type (' + typeof command + ')');
+        buffer = command;
     }
 
     var protocol = 1;
