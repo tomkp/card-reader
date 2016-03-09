@@ -6,6 +6,7 @@
     "smartcard",
     "smart-card",
     "iso7816",
+    "iso-7816",
     "emv",
     "es6"
   ],
