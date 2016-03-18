@@ -94,7 +94,7 @@ device.issueCommand = (command, fn) => {
     }
 
     var protocol = 1;
-    console.log('issue command', buffer);
+    //console.log(`issue command ${buffer}`);
     if (fn) {
         cardReader.transmit(buffer, 0xFF, protocol, fn);
     } else {
