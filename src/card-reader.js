@@ -3,7 +3,7 @@ import pcsclite from 'pcsclite';
 import hexify from 'hexify';
 
 
-const device = new EventEmitter();
+const devices = new EventEmitter();
 const pcsc = pcsclite();
 let cardReader;
 
@@ -11,11 +11,11 @@ let cardReader;
 const cardInserted = (reader, status) => {
     reader.connect((err, protocol) => {
         if (err) {
-            device.emit('error', err);
+            devices.emit('error', err);
         } else {
             cardReader = reader;
-            console.log('Protocol(', reader.name, '):', protocol);
-            device.emit('card-inserted', reader, status);
+            console.log(`Device '${reader.name}' has protocol '${protocol}'`);
+            devices.emit('card-inserted', reader, status);
         }
     });
 };
@@ -24,9 +24,9 @@ const cardInserted = (reader, status) => {
 const cardRemoved = (reader) => {
     reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
         if (err) {
-            device.emit('error', err);
+            devices.emit('error', err);
         } else {
-            device.emit('card-removed', reader);
+            devices.emit('card-removed', reader);
         }
     });
     cardReader = null;
@@ -44,7 +44,7 @@ const isCardRemoved = (changes, reader, status) => {
 
 
 const deviceActivated = (reader) => {
-    device.emit('device-activated', reader);
+    devices.emit('device-activated', reader);
 
     reader.on('status', (status) => {
         var changes = reader.state ^ status.state;
@@ -58,11 +58,11 @@ const deviceActivated = (reader) => {
     });
 
     reader.on('end', () => {
-        device.emit('device-deactivated', this);
+        devices.emit('device-deactivated', this);
     });
 
     reader.on('error', (err) => {
-        device.emit('error', err);
+        devices.emit('error', err);
     });
 };
 
@@ -73,12 +73,11 @@ pcsc.on('reader', (reader) => {
 
 
 pcsc.on('error', (err) => {
-    device.emit('error', err);
+    devices.emit('error', err);
 });
 
 
-
-device.issueCommand = (command, fn) => {
+devices.issueCommand = (command, callback) => {
     var buffer;
     if (Array.isArray(command)) {
         //console.log('command is an Array', hexify.toHexString(command));
@@ -95,13 +94,20 @@ device.issueCommand = (command, fn) => {
 
     var protocol = 1;
     //console.log(`issue command ${buffer}`);
-    if (fn) {
-        cardReader.transmit(buffer, 0xFF, protocol, fn);
+    devices.emit('issue-command', cardReader, buffer);
+    if (callback) {
+        cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
+            devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')));
+            callback(err, response);
+        });
     } else {
         return new Promise((resolve, reject) => {
             cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
                 if (err) reject(err);
-                else resolve(response);
+                else {
+                    devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')));
+                    resolve(response);
+                }
             });
         });
 
@@ -109,5 +115,5 @@ device.issueCommand = (command, fn) => {
 };
 
 
-module.exports = device;
+module.exports = devices;
 
