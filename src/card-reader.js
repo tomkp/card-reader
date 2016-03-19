@@ -80,20 +80,19 @@ pcsc.on('error', (err) => {
 devices.issueCommand = (command, callback) => {
     var buffer;
     if (Array.isArray(command)) {
-        //console.log('command is an Array', hexify.toHexString(command));
+        //console.debug('command is an Array', hexify.toHexString(command));
         buffer = new Buffer(command);
     } else if (typeof command === 'string') {
-        //console.log('command is a String', command);
+        //console.debug('command is a String', command);
         buffer = new Buffer(hexify.toByteArray(command));
     } else if (Buffer.isBuffer(command)) {
-        //console.log('command is a Buffer', command);
+        //console.debug('command is a Buffer', command);
         buffer = command;
     } else {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
 
     var protocol = 1;
-    //console.log(`issue command ${buffer}`);
     devices.emit('issue-command', cardReader, buffer);
     if (callback) {
         cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
