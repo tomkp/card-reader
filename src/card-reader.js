@@ -6,15 +6,17 @@ import hexify from 'hexify';
 const devices = new EventEmitter();
 const pcsc = pcsclite();
 let cardReader;
+let protocol;
 
 
 const cardInserted = (reader, status) => {
-    reader.connect((err, protocol) => {
+    reader.connect((err, readerProtocol) => {
         if (err) {
             devices.emit('error', err);
         } else {
             cardReader = reader;
-            console.log(`Device '${reader.name}' has protocol '${protocol}'`);
+            protocol = readerProtocol;
+            devices.emit('debug', `Device '${reader.name}' has protocol '${protocol}'`);
             devices.emit('card-inserted', reader, status);
         }
     });
@@ -26,10 +28,13 @@ const cardRemoved = (reader) => {
         if (err) {
             devices.emit('error', err);
         } else {
-            devices.emit('card-removed', reader);
+            if (cardReader) {
+                devices.emit('card-removed', reader);
+            }
         }
     });
     cardReader = null;
+    protocol = null;
 };
 
 
@@ -78,7 +83,7 @@ pcsc.on('error', (err) => {
 
 
 devices.issueCommand = (command, callback) => {
-    var buffer;
+    let buffer;
     if (Array.isArray(command)) {
         //console.debug('command is an Array', hexify.toHexString(command));
         buffer = new Buffer(command);
@@ -92,7 +97,6 @@ devices.issueCommand = (command, callback) => {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
 
-    var protocol = 1;
     devices.emit('issue-command', cardReader, buffer);
     if (callback) {
         cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
