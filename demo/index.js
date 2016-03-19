@@ -1,18 +1,29 @@
 var cardreader = require('../lib/card-reader');
 
-console.info('cardreader', cardreader);
-
 cardreader.on('device-activated', function (reader) {
-    console.info('Device activated', reader);
+    console.info(`Device '${reader.name}' activated`);
 });
 
 cardreader.on('device-deactivated', function (reader) {
-    console.info('Device deactivated', reader);
+    console.info(`Device '${reader.name}' deactivated`);
+});
+
+cardreader.on('card-removed', function (reader) {
+    console.info(`Card removed from '${reader.name}' `);
+});
+
+cardreader.on('issue-command', function (reader, command) {
+    console.info(`Command '${command}' issued to '${reader.name}' `);
+});
+
+cardreader.on('receive-response', function (reader, response) {
+    console.info(`Response '${response}' received from '${reader.name}' `);
 });
 
 
 cardreader.on('card-inserted', function (reader, status) {
-    console.info('Card inserted', reader, status, this);
+    
+    console.info(`Card inserted into '${reader.name}' `);
 
     // issue a command...
 
@@ -33,16 +44,4 @@ cardreader.on('card-inserted', function (reader, status) {
         }).catch(function(error) {
         console.error(error);
     });
-});
-
-cardreader.on('card-removed', function (reader) {
-    console.info('Card removed', reader);
-});
-
-cardreader.on('data-received', function (data) {
-    console.info('Data received', data.toString());
-});
-
-cardreader.on('error', function (error) {
-    console.info('Error', error);
 });
