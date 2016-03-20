@@ -3,6 +3,7 @@
   "version": "0.0.21",
   "author": "tomkp <tom@tomkp.com>",
   "keywords": [
+    "pcsc",
     "smartcard",
     "smart-card",
     "iso7816",
