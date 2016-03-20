@@ -85,13 +85,10 @@ pcsc.on('error', (err) => {
 devices.issueCommand = (command, callback) => {
     let buffer;
     if (Array.isArray(command)) {
-        //console.debug('command is an Array', hexify.toHexString(command));
         buffer = new Buffer(command);
     } else if (typeof command === 'string') {
-        //console.debug('command is a String', command);
         buffer = new Buffer(hexify.toByteArray(command));
     } else if (Buffer.isBuffer(command)) {
-        //console.debug('command is a Buffer', command);
         buffer = command;
     } else {
         throw 'Unable to recognise command type (' + typeof command + ')';
