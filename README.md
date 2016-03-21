@@ -66,3 +66,18 @@ cardreader.on('card-inserted', function (reader, status) {
 });
 
 ```
+
+## Readers
+
+Tested on Mac OSX with the SCM SCR3500 Smart Card Reader. 
+This library *should* work with most PC/SC readers - I'll update this page when I get to test others.
+If you know of any other devices that work please let me know.
+ 
+
+<div align="center">
+   <img src="docs/scr3500 collapsed.jpg" width=600 style="margin:1rem;" />
+</div>
+
+<div align="center">
+   <img src="docs/scr3500 expanded.jpg" width=600 style="margin:1rem;" />
+</div>
