@@ -75,9 +75,9 @@ If you know of any other devices that work please let me know.
  
 
 <div align="center">
-   <img src="docs/scr3500-collapsed.jpg" width=600 style="margin:1rem;" />
+   <img src="docs/scr3500-collapsed.JPG" width=600 style="margin:1rem;" />
 </div>
 
 <div align="center">
-   <img src="docs/scr3500-expanded.jpg" width=600 style="margin:1rem;" />
+   <img src="docs/scr3500-expanded.JPG" width=600 style="margin:1rem;" />
 </div>
