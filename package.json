@@ -1,6 +1,6 @@
 {
   "name": "card-reader",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "author": "tomkp <tom@tomkp.com>",
   "keywords": [
     "pcsc",
