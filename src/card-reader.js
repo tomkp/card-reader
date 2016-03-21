@@ -63,7 +63,7 @@ const deviceActivated = (reader) => {
     });
 
     reader.on('end', () => {
-        devices.emit('device-deactivated', this);
+        devices.emit('device-deactivated', reader);
     });
 
     reader.on('error', (err) => {
@@ -105,7 +105,7 @@ devices.issueCommand = (command, callback) => {
             cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
                 if (err) reject(err);
                 else {
-                    devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')));
+                    devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')), new Buffer(command.toLowerCase()));
                     resolve(response);
                 }
             });
