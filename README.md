@@ -67,7 +67,7 @@ cardreader.on('card-inserted', function (reader, status) {
 
 ```
 
-## Readers
+## Compatible Readers
 
 Tested on Mac OSX with the SCM SCR3500 Smart Card Reader. 
 This library *should* work with most PC/SC readers - I'll update this page when I get to test others.
