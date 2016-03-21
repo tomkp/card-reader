@@ -83,29 +83,29 @@ pcsc.on('error', (err) => {
 
 
 devices.issueCommand = (command, callback) => {
-    let buffer;
+    let commandBuffer;
     if (Array.isArray(command)) {
-        buffer = new Buffer(command);
+        commandBuffer = new Buffer(command);
     } else if (typeof command === 'string') {
-        buffer = new Buffer(hexify.toByteArray(command));
+        commandBuffer = new Buffer(hexify.toByteArray(command));
     } else if (Buffer.isBuffer(command)) {
-        buffer = command;
+        commandBuffer = command;
     } else {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
 
-    devices.emit('issue-command', cardReader, buffer);
+    devices.emit('issue-command', cardReader, commandBuffer);
     if (callback) {
-        cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
+        cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
             devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')));
             callback(err, response);
         });
     } else {
         return new Promise((resolve, reject) => {
-            cardReader.transmit(buffer, 0xFF, protocol, (err, response) => {
+            cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
                 if (err) reject(err);
                 else {
-                    devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')), new Buffer(command.toLowerCase()));
+                    devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')), commandBuffer);
                     resolve(response);
                 }
             });
