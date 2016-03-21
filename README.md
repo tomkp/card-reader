@@ -9,7 +9,8 @@ Emits events for:
 * device-deactivated
 * card-inserted
 * card-removed
-* data-received
+* issue-command
+* receive-response
 * error
 
 
