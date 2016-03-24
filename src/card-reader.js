@@ -31,10 +31,11 @@ const cardRemoved = (reader) => {
             if (cardReader) {
                 devices.emit('card-removed', reader);
             }
+            cardReader = null;
+            protocol = null;
         }
     });
-    cardReader = null;
-    protocol = null;
+
 };
 
 
