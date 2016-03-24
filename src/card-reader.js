@@ -95,10 +95,10 @@ devices.issueCommand = (command, callback) => {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
 
-    devices.emit('issue-command', cardReader, commandBuffer);
+    devices.emit('command-issued', cardReader, commandBuffer);
     if (callback) {
         cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
-            devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')));
+            devices.emit('response-received', cardReader, new Buffer(response.toString('hex')));
             callback(err, response);
         });
     } else {
@@ -106,7 +106,7 @@ devices.issueCommand = (command, callback) => {
             cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
                 if (err) reject(err);
                 else {
-                    devices.emit('receive-response', cardReader, new Buffer(response.toString('hex')), commandBuffer);
+                    devices.emit('response-received', cardReader, new Buffer(response.toString('hex')), commandBuffer);
                     resolve(response);
                 }
             });

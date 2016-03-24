@@ -12,11 +12,11 @@ cardreader.on('card-removed', function (reader) {
     console.info(`Card removed from '${reader.name}' `);
 });
 
-cardreader.on('issue-command', function (reader, command) {
+cardreader.on('command-issued', function (reader, command) {
     console.info(`Command '${command}' issued to '${reader.name}' `);
 });
 
-cardreader.on('receive-response', function (reader, response, command) {
+cardreader.on('response-received', function (reader, response, command) {
     console.info(`Response '${response}' received from '${reader.name}' in response to '${command}'`);
 });
 
