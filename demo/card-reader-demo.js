@@ -20,6 +20,9 @@ cardreader.on('receive-response', function (reader, response, command) {
     console.info(`Response '${response}' received from '${reader.name}' in response to '${command}'`);
 });
 
+cardreader.on('error', function (message) {
+    console.info(`Error '${message}' received`);
+});
 
 cardreader.on('card-inserted', function (reader, status) {
 
