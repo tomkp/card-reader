@@ -28,7 +28,7 @@ devices.on('error', function (event) {
 
 devices.on('card-inserted', function (event) {
 
-    console.log(`devices: ${devices.listDevices()}`);
+    console.log(`List devices: ${devices.listDevices()}`);
 
     var reader = event.reader;
     console.log(`Card inserted into '${reader.name}' `);
