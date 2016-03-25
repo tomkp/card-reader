@@ -5,6 +5,8 @@ import hexify from 'hexify';
 
 const devices = new EventEmitter();
 const pcsc = pcsclite();
+
+
 let cardReader;
 let protocol;
 
@@ -17,7 +19,7 @@ const cardInserted = (reader, status) => {
             cardReader = reader;
             protocol = readerProtocol;
             devices.emit('debug', `Device '${reader.name}' has protocol '${protocol}'`);
-            devices.emit('card-inserted', reader, status);
+            devices.emit('card-inserted', {reader, status, protocol});
         }
     });
 };
@@ -29,7 +31,7 @@ const cardRemoved = (reader) => {
             devices.emit('error', err);
         } else {
             if (cardReader) {
-                devices.emit('card-removed', reader);
+                devices.emit('card-removed', {reader});
             }
             cardReader = null;
             protocol = null;
@@ -50,7 +52,7 @@ const isCardRemoved = (changes, reader, status) => {
 
 
 const deviceActivated = (reader) => {
-    devices.emit('device-activated', reader);
+    devices.emit('device-activated', {reader});
 
     reader.on('status', (status) => {
         var changes = reader.state ^ status.state;
@@ -64,11 +66,11 @@ const deviceActivated = (reader) => {
     });
 
     reader.on('end', () => {
-        devices.emit('device-deactivated', reader);
+        devices.emit('device-deactivated', {reader});
     });
 
-    reader.on('error', (err) => {
-        devices.emit('error', err);
+    reader.on('error', (error) => {
+        devices.emit('error', {reader, error});
     });
 };
 
@@ -79,7 +81,7 @@ pcsc.on('reader', (reader) => {
 
 
 pcsc.on('error', (err) => {
-    devices.emit('error', err);
+    devices.emit('error', {error});
 });
 
 
@@ -95,10 +97,10 @@ devices.issueCommand = (command, callback) => {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
 
-    devices.emit('command-issued', cardReader, commandBuffer);
+    devices.emit('command-issued', {reader: cardReader, command: commandBuffer});
     if (callback) {
         cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
-            devices.emit('response-received', cardReader, new Buffer(response.toString('hex')));
+            devices.emit('response-received', {reader: cardReader, command: commandBuffer, response: new Buffer(response.toString('hex'))});
             callback(err, response);
         });
     } else {
@@ -106,7 +108,7 @@ devices.issueCommand = (command, callback) => {
             cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
                 if (err) reject(err);
                 else {
-                    devices.emit('response-received', cardReader, new Buffer(response.toString('hex')), commandBuffer);
+                    devices.emit('response-received', {reader: cardReader, command: commandBuffer, response: new Buffer(response.toString('hex'))});
                     resolve(response);
                 }
             });

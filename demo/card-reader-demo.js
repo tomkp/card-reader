@@ -1,32 +1,34 @@
-var cardreader = require('../lib/card-reader');
+'use strict';
 
-cardreader.on('device-activated', function (reader) {
-    console.log(`Device '${reader.name}' activated`);
+let cardreader = require('../lib/card-reader');
+
+cardreader.on('device-activated', function (event) {
+    console.log(`Device '${event.reader.name}' activated`);
 });
 
-cardreader.on('device-deactivated', function (reader) {
-    console.log(`Device '${reader}' deactivated`);
+cardreader.on('device-deactivated', function (event) {
+    console.log(`Device '${event.reader.name}' deactivated`);
 });
 
-cardreader.on('card-removed', function (reader) {
-    console.log(`Card removed from '${reader.name}' `);
+cardreader.on('card-removed', function (event) {
+    console.log(`Card removed from '${event.reader.name}' `);
 });
 
-cardreader.on('command-issued', function (reader, command) {
-    console.log(`Command '${command}' issued to '${reader.name}' `);
+cardreader.on('command-issued', function (event) {
+    console.log(`Command '${event.command}' issued to '${event.reader.name}' `);
 });
 
-cardreader.on('response-received', function (reader, response, command) {
-    console.log(`Response '${response}' received from '${reader.name}' in response to '${command}'`);
+cardreader.on('response-received', function (event) {
+    console.log(`Response '${event.response}' received from '${event.reader.name}' in response to '${event.command}'`);
 });
 
-cardreader.on('error', function (message) {
-    console.log(`Error '${message}' received`);
+cardreader.on('error', function (event) {
+    console.log(`Error '${event.error}' received`);
 });
 
-cardreader.on('card-inserted', function (reader, status) {
+cardreader.on('card-inserted', function (event) {
 
-    console.log(`Card inserted into '${reader.name}' `);
+    console.log(`Card inserted into '${event.reader.name}' `);
 
     cardreader
         .issueCommand('00A404000E315041592E5359532E4444463031')
