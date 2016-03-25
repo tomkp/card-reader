@@ -3,11 +3,11 @@
 let cardreader = require('../lib/card-reader');
 
 cardreader.on('device-activated', function (event) {
-    console.log(`Device '${event.reader.name}' activated`);
+    console.log(`Device '${event.reader.name}' activated, devices: ${cardreader.listDevices()}`);
 });
 
 cardreader.on('device-deactivated', function (event) {
-    console.log(`Device '${event.reader.name}' deactivated`);
+    console.log(`Device '${event.reader.name}' deactivated, devices: ${cardreader.listDevices()}`);
 });
 
 cardreader.on('card-removed', function (event) {
@@ -28,10 +28,13 @@ cardreader.on('error', function (event) {
 
 cardreader.on('card-inserted', function (event) {
 
-    console.log(`Card inserted into '${event.reader.name}' `);
+    console.log(`devices: ${cardreader.listDevices()}`);
+
+    var reader = event.reader;
+    console.log(`Card inserted into '${reader.name}' `);
 
     cardreader
-        .issueCommand('00A404000E315041592E5359532E4444463031')
+        .issueCommand(reader, '00A404000E315041592E5359532E4444463031')
         .then(function (response) {
             console.log(`Response '${response.toString('hex')}`);
         }).catch(function (error) {

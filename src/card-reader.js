@@ -3,23 +3,30 @@ import pcsclite from 'pcsclite';
 import hexify from 'hexify';
 
 
-const devices = new EventEmitter();
+const events = new EventEmitter();
 const pcsc = pcsclite();
 
 
-let cardReader;
-let protocol;
+let devices = {};
+
+
+events.listDevices = () => {
+  return Object.keys(devices);
+};
+
+events.fetchDevice = () => {
+    return Object.keys(devices);
+};
 
 
 const cardInserted = (reader, status) => {
-    reader.connect((err, readerProtocol) => {
+    reader.connect((err, protocol) => {
         if (err) {
-            devices.emit('error', err);
+            events.emit('error', err);
         } else {
-            cardReader = reader;
-            protocol = readerProtocol;
-            devices.emit('debug', `Device '${reader.name}' has protocol '${protocol}'`);
-            devices.emit('card-inserted', {reader, status, protocol});
+            devices[reader.name] = { reader, protocol};
+            events.emit('debug', `Device '${reader.name}' has protocol '${protocol}'`);
+            events.emit('card-inserted', {reader, status, protocol});
         }
     });
 };
@@ -28,13 +35,10 @@ const cardInserted = (reader, status) => {
 const cardRemoved = (reader) => {
     reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
         if (err) {
-            devices.emit('error', err);
+            events.emit('error', err);
         } else {
-            if (cardReader) {
-                devices.emit('card-removed', {reader});
-            }
-            cardReader = null;
-            protocol = null;
+            devices[reader.name] = {};
+            events.emit('card-removed', {reader});
         }
     });
 
@@ -52,7 +56,8 @@ const isCardRemoved = (changes, reader, status) => {
 
 
 const deviceActivated = (reader) => {
-    devices.emit('device-activated', {reader});
+    devices[reader.name] = {};
+    events.emit('device-activated', {reader});
 
     reader.on('status', (status) => {
         var changes = reader.state ^ status.state;
@@ -66,11 +71,12 @@ const deviceActivated = (reader) => {
     });
 
     reader.on('end', () => {
-        devices.emit('device-deactivated', {reader});
+        delete devices[reader.name];
+        events.emit('device-deactivated', {reader});
     });
 
     reader.on('error', (error) => {
-        devices.emit('error', {reader, error});
+        events.emit('error', {reader, error});
     });
 };
 
@@ -81,11 +87,12 @@ pcsc.on('reader', (reader) => {
 
 
 pcsc.on('error', (err) => {
-    devices.emit('error', {error});
+    events.emit('error', {error});
 });
 
 
-devices.issueCommand = (command, callback) => {
+events.issueCommand = (reader, command, callback) => {
+
     let commandBuffer;
     if (Array.isArray(command)) {
         commandBuffer = new Buffer(command);
@@ -97,26 +104,28 @@ devices.issueCommand = (command, callback) => {
         throw 'Unable to recognise command type (' + typeof command + ')';
     }
 
-    devices.emit('command-issued', {reader: cardReader, command: commandBuffer});
+
+    const protocol = devices[reader.name].protocol;
+
+    events.emit('command-issued', {reader, command: commandBuffer});
     if (callback) {
-        cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
-            devices.emit('response-received', {reader: cardReader, command: commandBuffer, response: new Buffer(response.toString('hex'))});
+        reader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
+            events.emit('response-received', {reader, command: commandBuffer, response: new Buffer(response.toString('hex'))});
             callback(err, response);
         });
     } else {
         return new Promise((resolve, reject) => {
-            cardReader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
+            reader.transmit(commandBuffer, 0xFF, protocol, (err, response) => {
                 if (err) reject(err);
                 else {
-                    devices.emit('response-received', {reader: cardReader, command: commandBuffer, response: new Buffer(response.toString('hex'))});
+                    events.emit('response-received', {reader, command: commandBuffer, response: new Buffer(response.toString('hex'))});
                     resolve(response);
                 }
             });
         });
-
     }
 };
 
 
-module.exports = devices;
+module.exports = events;
 
