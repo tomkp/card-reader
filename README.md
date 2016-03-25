@@ -20,50 +20,53 @@ Emits events for:
 var cardreader = require('../lib/card-reader');
 
 cardreader.on('device-activated', function (reader) {
-    console.info(`Device '${reader.name}' activated`);
+    console.log(`Device '${reader.name}' activated`);
 });
 
 cardreader.on('device-deactivated', function (reader) {
-    console.info(`Device '${reader.name}' deactivated`);
+    console.log(`Device '${reader}' deactivated`);
 });
 
 cardreader.on('card-removed', function (reader) {
-    console.info(`Card removed from '${reader.name}' `);
+    console.log(`Card removed from '${reader.name}' `);
 });
 
 cardreader.on('command-issued', function (reader, command) {
-    console.info(`Command '${command}' issued to '${reader.name}' `);
+    console.log(`Command '${command}' issued to '${reader.name}' `);
 });
 
-cardreader.on('response-received', function (reader, response) {
-    console.info(`Response '${response}' received from '${reader.name}' `);
+cardreader.on('response-received', function (reader, response, command) {
+    console.log(`Response '${response}' received from '${reader.name}' in response to '${command}'`);
 });
 
+cardreader.on('error', function (message) {
+    console.log(`Error '${message}' received`);
+});
 
 cardreader.on('card-inserted', function (reader, status) {
-    
-    console.info(`Card inserted into '${reader.name}' `);
 
-    // issue a command...
+   console.log(`Card inserted into '${reader.name}' `);
+   // issue a command...
 
-    // ...either callback style
-    cardreader.issueCommand('00A404000E315041592E5359532E4444463031', function (err, data) {
-        if (err) {
-            console.error(err);
-        } else {
-            console.info('data-received', data.toString('hex'));
-        }
-    });
-
-    // ...or as a promise
-    cardreader
+   // ...either callback style
+   cardreader.issueCommand('00A404000E315041592E5359532E4444463031', function (err, response) {
+       if (err) {
+           console.error(err);
+       } else {
+            console.log(`Response '${response.toString('hex')}`);
+       }
+   });
+       
+   // ...or as a promise
+   cardreader
         .issueCommand('00A404000E315041592E5359532E4444463031')
-        .then(function(response) {
-            console.info('data-received', response.toString('hex'));
-        }).catch(function(error) {
-        console.error(error);
-    });
+        .then(function (response) {
+            console.log(`Response '${response.toString('hex')}`);
+        }).catch(function (error) {
+            console.error(error);
+        });
 });
+
 
 ```
 
