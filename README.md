@@ -1,7 +1,7 @@
 
 
 
->## Please use [smartcard](https://github.com/tomkp/smartcard) instead....
+>## DEPRECATED - Please use [smartcard](https://github.com/tomkp/smartcard) instead....
 
 -----------------
 
