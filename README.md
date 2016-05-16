@@ -1,6 +1,13 @@
 # Card Reader
 
+>## This Project Is Deprecated
+
+>Deprecated in favour of [smartcard](hhttps://github.com/tomkp/smartcard),
+
+-----------------
+
 A simple wrapper around [Santiago Gimeno's](https://www.npmjs.org/~sgimeno) great [pcsclite](https://github.com/santigimeno/node-pcsclite) library.
+
 
 
 Emits events for:
