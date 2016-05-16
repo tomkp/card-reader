@@ -1,8 +1,8 @@
 
 
->## This Project Is Now Deprecated
+>### This Project Is Now Deprecated
 
->Deprecated in favour of [smartcard](https://github.com/tomkp/smartcard) - give it a try instead....
+>## Deprecated in favour of [smartcard](https://github.com/tomkp/smartcard) - give it a try instead....
 
 -----------------
 
