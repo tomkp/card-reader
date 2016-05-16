@@ -2,7 +2,7 @@
 
 >## This Project Is Deprecated
 
->Deprecated in favour of [smartcard](hhttps://github.com/tomkp/smartcard),
+>Deprecated in favour of [smartcard](https://github.com/tomkp/smartcard),
 
 -----------------
 
