@@ -1,10 +1,13 @@
-# Card Reader
 
->## This Project Is Deprecated
 
->Deprecated in favour of [smartcard](https://github.com/tomkp/smartcard),
+>## This Project Is Now Deprecated
+
+>Deprecated in favour of [smartcard](https://github.com/tomkp/smartcard) - give it a try instead....
 
 -----------------
+
+
+# Card Reader
 
 A simple wrapper around [Santiago Gimeno's](https://www.npmjs.org/~sgimeno) great [pcsclite](https://github.com/santigimeno/node-pcsclite) library.
 
